@@ -2,6 +2,7 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import styled from 'styled-components';
 import media from '../lib/styles/media';
+import { useForm, ValidationError } from '@formspree/react';
 
 const Container = styled.div`
 	width: 100%;
@@ -152,7 +153,7 @@ const ContentTop = styled.div`
 	}
 `
 
-const ContentBottom = styled.div`
+const ContentBottom = styled.form`
 	display: flex;
 	flex: 1.5;
 	flex-direction: column;
@@ -271,6 +272,9 @@ const RollinImage = styled.img`
 `;
 
 export default function Home() {
+
+	const [state, handleSubmit] = useForm("xdoygqnv");
+
 	return (
 		<Container>
 			<Head>
@@ -298,10 +302,22 @@ export default function Home() {
 						</InnerContent>
 						<RollinImage src="images/rollin_pinkies.png" />
 					</ContentTop>
-					<ContentBottom>
+					<ContentBottom onSubmit={handleSubmit}>
 						<FormTitle>Pinkies in your Inbox</FormTitle>
-						<FormInput type="text" placeholder="enter email"/>
-						<FormButton>Subscribe</FormButton>
+						<FormInput 
+							id="email"
+        			type="email" 
+        			name="email" 
+							placeholder="enter email"
+						/>
+						<ValidationError 
+							prefix="Message" 
+							field="message"
+							errors={state.errors}
+						/>
+						<FormButton type="submit" disabled={state.submitting}>
+							{ state.succeeded ? 'Success!' : 'Subscribe' }
+						</FormButton>
 					</ContentBottom>
 				</HeroContent>
 			</Content>
